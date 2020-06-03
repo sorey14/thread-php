@@ -32,7 +32,6 @@ final class UploadTweetImageAction
         if ($tweet->author_id !== Auth::id()) {
             throw new AuthorizationException();
         }
-
         $filePath = Storage::putFileAs(
             Config::get('filesystems.tweet_images_dir'),
             $request->getImage(),

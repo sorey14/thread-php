@@ -53,8 +53,10 @@ docker exec -it thread-app php artisan storage:link
 Application server should be ready on `http://localhost:<APP_PORT>`
 
 Pusher websocket server install:
-* Create an account and application on [pusher.com](https://pusher.com/) and copy your credentials to your .env (`PUSHER_APP_ID=...`).
-* Update your .env (`QUEUE_CONNECTION=beanstalkd`, `BROADCAST_DRIVER=pusher`) and launch beanstalkd queue listening to messages by `docker exec -it thread-app php artisan queue:work`
+* Create an account and application on [pusher.com](https://pusher.com/) and copy your credentials to your .env
+(`PUSHER_APP_ID=...`).
+* Update your .env (`QUEUE_CONNECTION=beanstalkd`, `BROADCAST_DRIVER=pusher`)
+ and launch beanstalkd queue listening to messages by `docker exec -it thread-app php artisan queue:work`
 
 Emails processing .env settings (you can use [mailtrap](https://mailtrap.io/) or your smtp credentials like user@gmail.com):
 ```dotenv

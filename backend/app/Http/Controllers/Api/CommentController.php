@@ -18,6 +18,14 @@ use App\Http\Response\ApiResponse;
 use App\Http\Request\Api\CollectionHttpRequest;
 use App\Action\Comment\GetCommentCollectionByTweetIdRequest;
 
+use App\Http\Request\Api\Comment\UpdateCommentHttpRequest;
+use App\Action\Comment\UpdateCommentAction;
+use App\Action\Comment\UpdateCommentRequest;
+
+use App\Action\Comment\DeleteCommentAction;
+use App\Action\Comment\DeleteCommentRequest;
+
+
 final class CommentController extends ApiController
 {
     private $getCommentCollectionAction;
@@ -25,19 +33,25 @@ final class CommentController extends ApiController
     private $getCommentByIdAction;
     private $addCommentAction;
     private $getCommentCollectionByTweetIdAction;
+    private $updateCommentAction;
+    private $deleteCommentAction;
 
     public function __construct(
         GetCommentCollectionAction $getCommentCollectionAction,
         CommentAsArrayPresenter $presenter,
         GetCommentByIdAction $commentByIdAction,
         AddCommentAction $addCommentAction,
-        GetCommentCollectionByTweetIdAction $getCommentCollectionByTweetIdAction
+        GetCommentCollectionByTweetIdAction $getCommentCollectionByTweetIdAction,
+        UpdateCommentAction $updateCommentAction,
+        DeleteCommentAction $deleteCommentAction
     ) {
         $this->getCommentCollectionAction = $getCommentCollectionAction;
         $this->presenter = $presenter;
         $this->getCommentByIdAction = $commentByIdAction;
         $this->addCommentAction = $addCommentAction;
         $this->getCommentCollectionByTweetIdAction = $getCommentCollectionByTweetIdAction;
+        $this->updateCommentAction = $updateCommentAction;
+        $this->deleteCommentAction = $deleteCommentAction;
     }
 
     public function getCommentCollection(CollectionHttpRequest $request): ApiResponse
@@ -89,4 +103,32 @@ final class CommentController extends ApiController
 
         return $this->createPaginatedResponse($response->getPaginator(), $this->presenter);
     }
+
+    public function updateCommentById(string $id, UpdateCommentHttpRequest $request): ApiResponse
+    {
+        $response = $this->updateCommentAction->execute(
+            new UpdateCommentRequest(
+                (int)$id,
+                $request->get('text')
+            )
+        );
+
+        return $this->createSuccessResponse(
+            $this->presenter->present(
+                $response->getComment()
+            )
+        );
+    }
+
+    public function deleteCommentById(string $id): ApiResponse
+    {
+        $this->deleteCommentAction->execute(
+            new DeleteCommentRequest(
+                (int)$id
+            )
+        );
+
+        return $this->createDeletedResponse();
+    }
+
 }
