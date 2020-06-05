@@ -26,7 +26,8 @@ final class Comment extends Model
     protected $fillable = [
         'body',
         'author_id',
-        'tweet_id'
+        'tweet_id',
+        'image_url',
     ];
 
     // append author relation in entity by default
@@ -52,6 +53,11 @@ final class Comment extends Model
         return $this->body;
     }
 
+    public function getImageUrl(): ?string
+    {
+        return $this->image_url;
+    }
+
     public function getCreatedAt(): Carbon
     {
         return $this->created_at;
@@ -67,6 +73,11 @@ final class Comment extends Model
         return $this->author_id;
     }
 
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
+
     public function edit(string $text): void
     {
         if (empty($text)) {
@@ -80,4 +91,14 @@ final class Comment extends Model
     {
         return $this->tweet_id;
     }
+
+    public function changePreviewImage(string $imageUrl): void
+    {
+        if (empty($imageUrl)) {
+            throw new InvalidArgumentException('Empty image url.');
+        }
+
+        $this->image_url = $imageUrl;
+    }
+
 }

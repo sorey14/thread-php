@@ -9,15 +9,16 @@ use App\Action\Tweet\LikeTweetRequest;
 use App\Http\Controllers\ApiController;
 use App\Http\Response\ApiResponse;
 
+
 final class LikeController extends ApiController
 {
     private $likeTweetAction;
 
-    public function __construct(LikeTweetAction $likeTweetAction)
+    public function __construct(LikeTweetAction $likeTweetAction )
     {
         $this->likeTweetAction = $likeTweetAction;
     }
-
+    
     public function likeOrDislikeTweet(string $id): ApiResponse
     {
         $response = $this->likeTweetAction->execute(new LikeTweetRequest((int)$id));

@@ -21,7 +21,7 @@ export default {
             commit(SET_LOADING, false, { root: true });
 
             return Promise.resolve(
-                tweets.map(tweetMapper)
+                // tweets.map(tweetMapper)
             );
         } catch (error) {
             commit(SET_LOADING, false, { root: true });
@@ -87,9 +87,7 @@ export default {
         try {
             const formData = new FormData();
             formData.append('image', imageFile);
-
             const tweet = await api.post(`/tweets/${id}/image`, formData);
-
             commit(SET_TWEET_IMAGE, {
                 id,
                 imageUrl: tweet.image_url

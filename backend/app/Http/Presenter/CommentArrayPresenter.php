@@ -1,19 +1,21 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Http\Presenter;
 
 use App\Entity\Comment;
 use Illuminate\Support\Collection;
 
-final class CommentAsArrayPresenter implements CollectionAsArrayPresenter
+final class CommentArrayPresenter implements CollectionAsArrayPresenter
 {
-    private $userArrayPresenter;
+    private $userPresenter;
+    private $likeArrayPresenter;
 
-    public function __construct(UserArrayPresenter $userArrayPresenter)
+    public function __construct(UserArrayPresenter $userPresenter, LikeArrayPresenter $likeArrayPresenter)
     {
-        $this->userArrayPresenter = $userArrayPresenter;
+        $this->userPresenter = $userPresenter;
+        $this->likeArrayPresenter = $likeArrayPresenter;
     }
 
     public function present(Comment $comment): array
@@ -22,11 +24,11 @@ final class CommentAsArrayPresenter implements CollectionAsArrayPresenter
             'id' => $comment->getId(),
             'body' => $comment->getBody(),
             'image_url' => $comment->getImageUrl(),
-            'author_id' => $comment->getAuthorId(),
-            'tweet_id' => $comment->getTweetId(),
             'created_at' => $comment->getCreatedAt()->toDateTimeString(),
-            'updated_at' => $comment->getUpdatedAt() ? $comment->getUpdatedAt()->toDateTimeString() : null,
-            'author' => $this->userArrayPresenter->present($comment->author)
+            'author' => $this->userPresenter->present($comment->getAuthor()),
+//            'comments_count' => $comment->getCommentsCount(),
+//            'likes_count' => $comment->getLikesCount(),
+//            'likes' => $this->likeArrayPresenter->presentCollection($comment->likes)
         ];
     }
 
