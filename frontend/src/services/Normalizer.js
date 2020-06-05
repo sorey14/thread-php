@@ -18,16 +18,6 @@ export const emptyUser = () => ({
     lastName: '',
 });
 
-export const commentMapper = comment => ({
-    id: comment.id,
-    body: comment.body,
-    authorId: comment.author_id,
-    tweetId: comment.tweet_id,
-    created: comment.created_at,
-    updated: comment.updated_at,
-    author: userMapper(comment.author),
-});
-
 export const likeMapper = like => ({
     userId: like.user_id
 });
@@ -41,4 +31,17 @@ export const tweetMapper = tweet => ({
     commentsCount: tweet.comments_count,
     likesCount: tweet.likes_count,
     likes: tweet.likes.map(likeMapper)
+});
+
+export const commentMapper = comment => ({
+    id: comment.id,
+    body: comment.body,
+    imageUrl: comment.image_url,
+    authorId: comment.author_id,
+    tweetId: comment.tweet_id,
+    created: comment.created_at,
+    updated: comment.updated_at,
+    author: userMapper(comment.author),
+    // likesCount: comment.likes_count,
+    // likes: comment.likes.map(likeMapper)
 });

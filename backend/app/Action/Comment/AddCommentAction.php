@@ -36,6 +36,7 @@ final class AddCommentAction
         $comment->author_id = Auth::id();
         $comment->tweet_id = $request->getTweetId();
         $comment->body = $request->getBody();
+        $comment->image_url = $request->getBody()??'';
 
         $comment = $this->commentRepository->save($comment);
 

@@ -59,13 +59,13 @@ export default {
 
         async save() {
             try {
-                const comment = await this.editComment({ id: this.comment.id, body: this.text });
+                const comment = await this.editComment({ id: this.comment.id, text: this.text });
 
                 if (this.image === null) {
                     this.$parent.close();
                     return;
                 }
-
+                // console.log(this.image);
                 await this.uploadCommentImage({
                     id: comment.id,
                     imageFile: this.image

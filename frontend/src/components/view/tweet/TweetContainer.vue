@@ -80,14 +80,19 @@
                         </div>
                     </div>
                 </div>
+                {{ cons(tweet.id) }}
 
                 <template v-for="comment in getCommentsByTweetId(tweet.id)">
+                    {{ cons(comment) }}
                     <Comment
                         :key="comment.id"
                         :comment="comment"
                     />
+                    <LikeDislike
+                        :key="comment.author.id"
+                        :tweet="tweet"
+                    />
                 </template>
-
                 <NewCommentForm :tweet-id="tweet.id" />
             </div>
         </article>
@@ -105,12 +110,16 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import Comment from './Comment.vue';
 import NewCommentForm from './NewCommentForm.vue';
 import EditTweetForm from './EditTweetForm.vue';
 import DefaultAvatar from '../../common/DefaultAvatar.vue';
 import showStatusToast from '../../mixin/showStatusToast';
+import LikeDislike from './LikeDislike.vue';
+
+Vue.component('LikeDislike', { /* ... */ });
 
 export default {
     name: 'TweetContainer',
@@ -120,10 +129,12 @@ export default {
         NewCommentForm,
         EditTweetForm,
         DefaultAvatar,
+        LikeDislike,
     },
 
     mixins: [showStatusToast],
-
+    props: {
+    },
     data: () => ({
         isEditTweetModalActive: false,
         isImageModalActive: false
@@ -156,11 +167,15 @@ export default {
         ]),
 
         tweet() {
+            // console.log(this.getTweetById(this.$route.params.id));
             return this.getTweetById(this.$route.params.id);
         },
     },
 
     methods: {
+        cons(comment) {
+            console.log(comment);
+        },
         ...mapActions('tweet', [
             'fetchTweetById',
             'deleteTweet',

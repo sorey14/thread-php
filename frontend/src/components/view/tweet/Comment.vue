@@ -26,8 +26,17 @@
                         {{ comment.created | createdDate }}
                     </small>
                 </p>
+                <figure v-if="comment.imageUrl" class="image is-3by1 tweet-image">
+                    <img
+                        :src="comment.imageUrl"
+                        alt="Comment image"
+                        @click="showImageModal"
+                    >
+                </figure>
             </div>
         </div>
+        {{ consol(comment) }}
+
         <div v-if="isCommentOwner(comment.id, user.id)" class="column is-narrow is-12-mobile">
             <div class="buttons">
                 <b-button type="is-warning" @click="onEditComment">Edit</b-button>
@@ -42,7 +51,6 @@
                 <EditCommentForm :comment="comment" />
             </b-modal>
         </div>
-
     </article>
 </template>
 
@@ -83,7 +91,11 @@ export default {
     },
 
     methods: {
-        ...mapActions('cot', [
+        consol(comment) {
+            console.log(comment);
+        },
+
+        ...mapActions('comment', [
             'deleteComment',
             'editComment'
         ]),

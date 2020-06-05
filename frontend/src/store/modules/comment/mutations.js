@@ -1,9 +1,11 @@
 import { commentMapper } from '@/services/Normalizer';
 import {
     SET_COMMENTS,
+    SET_COMMENT_IMAGE,
     ADD_COMMENT,
     SET_COMMENT,
-    DELETE_COMMENT
+    DELETE_COMMENT,
+    INCREMENT_COMMENTS_COUNT,
 } from './mutationTypes';
 
 export default {
@@ -18,6 +20,10 @@ export default {
         });
 
         state.comments = commentsByIdMap;
+    },
+
+    [SET_COMMENT_IMAGE]: (state, { id, imageUrl }) => {
+        state.comments[id].imageUrl = imageUrl;
     },
 
     [ADD_COMMENT]: (state, comment) => {
@@ -38,4 +44,7 @@ export default {
         delete state.comments[id];
     },
 
+    [INCREMENT_COMMENTS_COUNT]: (state, id) => {
+        state.tweets[id].commentsCount++;
+    },
 };

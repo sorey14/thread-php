@@ -3,9 +3,10 @@ import { commentMapper } from '@/services/Normalizer';
 import { SET_LOADING } from '../../mutationTypes';
 import {
     SET_COMMENTS,
+    SET_COMMENT_IMAGE,
     ADD_COMMENT,
     SET_COMMENT,
-    DELETE_COMMENT
+    DELETE_COMMENT,
 } from './mutationTypes';
 import { INCREMENT_COMMENTS_COUNT } from '../tweet/mutationTypes';
 
@@ -17,11 +18,13 @@ export default {
             const comments = await api.get(`/tweets/${tweetId}/comments`, {
                 direction: 'asc',
             });
-
+            // console.log(comments);
             commit(SET_COMMENTS, comments);
             commit(SET_LOADING, false, { root: true });
 
-            return Promise.resolve();
+            return Promise.resolve(
+                comments.map(commentMapper)
+            );
         } catch (error) {
             commit(SET_LOADING, false, { root: true });
 
@@ -47,12 +50,36 @@ export default {
         }
     },
 
+    async uploadCommentImage({ commit }, { id, imageFile }) {
+        commit(SET_LOADING, true, { root: true });
+
+        try {
+            const formData = new FormData();
+            formData.append('image', imageFile);
+            const comment = await api.post(`/comments/${id}/image`, formData);
+            console.log('SOME  URL');
+            console.log(comment);
+            commit(SET_COMMENT_IMAGE, {
+                id,
+                imageUrl: comment.image_url
+            });
+
+            commit(SET_LOADING, false, { root: true });
+
+            return Promise.resolve();
+        } catch (error) {
+            commit(SET_LOADING, false, { root: true });
+
+            return Promise.reject(error);
+        }
+    },
+
     async editComment({ commit }, { id, text }) {
         commit(SET_LOADING, true, { root: true });
 
         try {
-            const comment = await api.put(`/comments/${id}`, { body: text });
-
+            const comment = await api.put(`/comments/${id}`, { text });
+            console.log(comment);
             commit(SET_COMMENT, comment);
             commit(SET_LOADING, false, { root: true });
 
@@ -80,5 +107,4 @@ export default {
             return Promise.reject(error);
         }
     },
-
 };

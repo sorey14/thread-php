@@ -20,6 +20,4 @@ export default {
     getCommentById: state => id => state.comments[id],
 
     isCommentOwner: (state, getters) => (commentId, userId) => getters.getCommentById(commentId).author.id === userId,
-
-
 };
