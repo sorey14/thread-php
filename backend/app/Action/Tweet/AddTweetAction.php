@@ -26,7 +26,7 @@ final class AddTweetAction
 
         $tweet = $this->tweetRepository->save($tweet);
         
-//        broadcast(new TweetAddedEvent($tweet))->toOthers();
+        broadcast(new TweetAddedEvent($tweet))->toOthers();
 
         return new AddTweetResponse($tweet);
     }

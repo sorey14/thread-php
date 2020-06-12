@@ -20,15 +20,16 @@ final class CommentArrayPresenter implements CollectionAsArrayPresenter
 
     public function present(Comment $comment): array
     {
+        var_dump($comment);
         return [
             'id' => $comment->getId(),
             'body' => $comment->getBody(),
             'image_url' => $comment->getImageUrl(),
             'created_at' => $comment->getCreatedAt()->toDateTimeString(),
             'author' => $this->userPresenter->present($comment->getAuthor()),
-//            'comments_count' => $comment->getCommentsCount(),
-//            'likes_count' => $comment->getLikesCount(),
-//            'likes' => $this->likeArrayPresenter->presentCollection($comment->likes)
+            'comments_count' => $comment->getCommentsCount(),
+            'likes_count' => $comment->getLikesCount(),
+            'likes' => $this->likeArrayPresenter->presentCollection($comment->likes)
         ];
     }
 

@@ -25,8 +25,11 @@
                     <small class="has-text-grey">
                         {{ comment.created | createdDate }}
                     </small>
+                    <LikeDislike
+                        :comment="comment"
+                    />
                 </p>
-                <figure v-if="comment.imageUrl" class="image is-3by1 tweet-image">
+                <figure v-if="comment.imageUrl!=comment.body" class="image is-3by1 tweet-image">
                     <img
                         :src="comment.imageUrl"
                         alt="Comment image"
@@ -35,7 +38,6 @@
                 </figure>
             </div>
         </div>
-        {{ consol(comment) }}
 
         <div v-if="isCommentOwner(comment.id, user.id)" class="column is-narrow is-12-mobile">
             <div class="buttons">
@@ -59,6 +61,7 @@ import { mapGetters, mapActions } from 'vuex';
 import EditCommentForm from './EditCommentForm.vue';
 import DefaultAvatar from '../../common/DefaultAvatar.vue';
 import showStatusToast from '../../mixin/showStatusToast';
+import LikeDislike from './LikeDislike.vue';
 
 export default {
     name: 'Comment',
@@ -66,6 +69,7 @@ export default {
     components: {
         DefaultAvatar,
         EditCommentForm,
+        LikeDislike,
     },
     mixins: [showStatusToast],
 
@@ -79,7 +83,20 @@ export default {
             type: Object,
             required: true,
         },
+        tweet: {
+            type: Object,
+            required: true,
+        },
     },
+    /* async created() {
+        try {
+            await this.fetchCommentById(this.$route.params.id);
+
+            this.fetchComments(this.comment.id);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }, */
     computed: {
         ...mapGetters('auth', {
             user: 'getAuthenticatedUser'
@@ -87,11 +104,16 @@ export default {
 
         ...mapGetters('comment', [
             'isCommentOwner',
+            'getCommentById',
         ]),
+        /* comment() {
+            // console.log(this.getTweetById(this.$route.params.id));
+            return this.getCommentById(this.$route.params.id);
+        } */
     },
 
     methods: {
-        consol(comment) {
+        cons(comment) {
             console.log(comment);
         },
 
@@ -114,10 +136,10 @@ export default {
                 onConfirm: async () => {
                     try {
                         await this.deleteComment(this.comment.id);
-
                         this.showSuccessMessage('Comment deleted!');
-
-                        this.$router.push({ name: 'comment-page' }).catch(() => {});
+                        // console.log(this.tweet.id);
+                        this.$router.push({ name: 'tweet-page', params: { id: this.tweet.id } }).catch(() => {});
+                        // this.$router.push({ name: 'feed' }).catch(() => {});
                     } catch {
                         this.showErrorMessage('Unable to delete comment!');
                     }

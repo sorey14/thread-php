@@ -31,7 +31,7 @@ final class TweetController extends ApiController
     private $getTweetCollectionAction;
     private $presenter;
     private $getTweetByIdAction;
-    private $getTweetCollectionByUserIdAction;
+    private     $getTweetCollectionByUserIdAction;
     private $addTweetAction;
     private $updateTweetAction;
     private $uploadTweetImageAction;

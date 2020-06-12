@@ -7,6 +7,8 @@ import {
     ADD_COMMENT,
     SET_COMMENT,
     DELETE_COMMENT,
+    LIKE_COMMENT,
+    DISLIKE_COMMENT,
 } from './mutationTypes';
 import { INCREMENT_COMMENTS_COUNT } from '../tweet/mutationTypes';
 
@@ -18,7 +20,6 @@ export default {
             const comments = await api.get(`/tweets/${tweetId}/comments`, {
                 direction: 'asc',
             });
-            // console.log(comments);
             commit(SET_COMMENTS, comments);
             commit(SET_LOADING, false, { root: true });
 
@@ -57,8 +58,6 @@ export default {
             const formData = new FormData();
             formData.append('image', imageFile);
             const comment = await api.post(`/comments/${id}/image`, formData);
-            console.log('SOME  URL');
-            console.log(comment);
             commit(SET_COMMENT_IMAGE, {
                 id,
                 imageUrl: comment.image_url
@@ -79,7 +78,7 @@ export default {
 
         try {
             const comment = await api.put(`/comments/${id}`, { text });
-            console.log(comment);
+            // console.log(comment);
             commit(SET_COMMENT, comment);
             commit(SET_LOADING, false, { root: true });
 
@@ -107,4 +106,35 @@ export default {
             return Promise.reject(error);
         }
     },
+
+    async likeOrDislikeComment({ commit }, { id, userId, email }) {
+        commit(SET_LOADING, true, { root: true });
+        try {
+            const data = await api.put(`/comments/${id}/like`);
+            if (data.status === 'added') {
+                commit(LIKE_COMMENT, {
+                    id,
+                    userId
+                });
+                // console.log(data);
+                // const emailRespose =
+                await api.get(`/feed-page/${email}`);
+                // console.log(emailRespose);
+            } else {
+                commit(DISLIKE_COMMENT, {
+                    id,
+                    userId
+                });
+            }
+
+            commit(SET_LOADING, false, { root: true });
+
+            return Promise.resolve();
+        } catch (error) {
+            commit(SET_LOADING, false, { root: true });
+
+            return Promise.reject(error);
+        }
+    },
+
 };

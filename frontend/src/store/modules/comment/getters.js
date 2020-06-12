@@ -20,4 +20,11 @@ export default {
     getCommentById: state => id => state.comments[id],
 
     isCommentOwner: (state, getters) => (commentId, userId) => getters.getCommentById(commentId).author.id === userId,
+
+    getState: (state) => console.log(state),
+
+    commentIsLikedByUser: (state, getters) => (commentId, userId) => getters
+        .getCommentById(commentId)
+        .likes
+        .find(like => like.userId === userId) !== undefined
 };

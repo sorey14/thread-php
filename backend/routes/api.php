@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\WelcomeEmail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
+    Route::get('/feed-page/{email}', function ($email) {
+        Mail::to($email)->send(new WelcomeEmail());
+
+        return 'A message has been sent to Mailtrap!';
+
+
+    });
+
     Route::group(['prefix' => 'auth', 'namespace' => 'Api\\Auth'], function () {
         Route::post('/register', 'AuthController@register');
         Route::post('/login', 'AuthController@login');
@@ -56,9 +65,9 @@ Route::prefix('v1')->group(function () {
             Route::post('/', 'CommentController@newComment');
             Route::put('/{id}', 'CommentController@updateCommentById');
             Route::delete('/{id}', 'CommentController@deleteCommentById');
-            Route::put('/{id}/like', 'LikeController@likeOrDislikeComment');
             Route::post('/{id}/image', 'CommentController@uploadCommentImage');
             Route::delete('/{id}', 'CommentController@deleteCommentById');
+            Route::put('/{id}/like', 'LikeCommentController@likeOrDislikeComment');
 
         });
     });

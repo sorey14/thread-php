@@ -6,7 +6,8 @@
 * [Laravel 6](https://laravel.com)
 * [Docker](https://www.docker.com/)
 * [Docker-compose](https://docs.docker.com/compose/)
-* [Beanstalkd](https://github.com/beanstalkd/beanstalkd) - message queue (очередь сообщений для обработки тяжелых задач асинхронно)
+* [Beanstalkd](https://github.com/beanstalkd/beanstalkd) - message queue
+(очередь сообщений для обработки тяжелых задач асинхронно)
 * [REST API](https://ru.wikipedia.org/wiki/REST)
 * [CORS](https://developer.mozilla.org/ru/docs/Web/HTTP/CORS)
 * [JWT](https://ru.wikipedia.org/wiki/JSON_Web_Token) tokens

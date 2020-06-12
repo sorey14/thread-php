@@ -1,5 +1,6 @@
 <template>
     <div v-if="tweet">
+        <!-- {{ cons(tweet)}} -->
         <article class="media box tweet">
             <figure class="media-left">
                 <router-link
@@ -80,18 +81,17 @@
                         </div>
                     </div>
                 </div>
-                {{ cons(tweet.id) }}
 
                 <template v-for="comment in getCommentsByTweetId(tweet.id)">
-                    {{ cons(comment) }}
                     <Comment
                         :key="comment.id"
                         :comment="comment"
-                    />
-                    <LikeDislike
-                        :key="comment.author.id"
                         :tweet="tweet"
                     />
+                    <!-- <LikeDislike
+                        :key="comment.author.id"
+                        :comment="comment"
+                    /> -->
                 </template>
                 <NewCommentForm :tweet-id="tweet.id" />
             </div>
@@ -117,7 +117,7 @@ import NewCommentForm from './NewCommentForm.vue';
 import EditTweetForm from './EditTweetForm.vue';
 import DefaultAvatar from '../../common/DefaultAvatar.vue';
 import showStatusToast from '../../mixin/showStatusToast';
-import LikeDislike from './LikeDislike.vue';
+// import LikeDislike from './LikeDislike.vue';
 
 Vue.component('LikeDislike', { /* ... */ });
 
@@ -129,15 +129,17 @@ export default {
         NewCommentForm,
         EditTweetForm,
         DefaultAvatar,
-        LikeDislike,
+        // LikeDislike,
     },
 
     mixins: [showStatusToast],
+
     props: {
     },
+
     data: () => ({
         isEditTweetModalActive: false,
-        isImageModalActive: false
+        isImageModalActive: false,
     }),
 
     async created() {
@@ -173,8 +175,8 @@ export default {
     },
 
     methods: {
-        cons(comment) {
-            console.log(comment);
+        cons(tweet) {
+            console.log(tweet);
         },
         ...mapActions('tweet', [
             'fetchTweetById',
@@ -217,9 +219,11 @@ export default {
 
         async onLikeOrDislikeTweet() {
             try {
+                // console.log(this.tweet);
                 await this.likeOrDislikeTweet({
                     id: this.tweet.id,
-                    userId: this.user.id
+                    userId: this.user.id,
+                    email: this.tweet.author.email
                 });
             } catch (error) {
                 console.error(error.message);
