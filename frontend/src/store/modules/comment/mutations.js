@@ -6,6 +6,8 @@ import {
     SET_COMMENT,
     DELETE_COMMENT,
     INCREMENT_COMMENTS_COUNT,
+    LIKE_COMMENT,
+    DISLIKE_COMMENT,
 } from './mutationTypes';
 
 export default {
@@ -45,6 +47,18 @@ export default {
     },
 
     [INCREMENT_COMMENTS_COUNT]: (state, id) => {
-        state.tweets[id].commentsCount++;
+        state.comments[id].commentsCount++;
     },
+
+    [LIKE_COMMENT]: (state, { id, userId }) => {
+        state.comments[id].likesCount++;
+
+        state.comments[id].likes.push({ userId });
+    },
+
+    [DISLIKE_COMMENT]: (state, { id, userId }) => {
+        state.comments[id].likesCount--;
+
+        state.comments[id].likes = state.comments[id].likes.filter(like => like.userId !== userId);
+    }
 };

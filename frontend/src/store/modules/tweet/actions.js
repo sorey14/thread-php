@@ -16,12 +16,10 @@ export default {
 
         try {
             const tweets = await api.get('/tweets', { page });
-
             commit(SET_TWEETS, tweets);
             commit(SET_LOADING, false, { root: true });
-
             return Promise.resolve(
-                // tweets.map(tweetMapper)
+                tweets.map(tweetMapper)
             );
         } catch (error) {
             commit(SET_LOADING, false, { root: true });
@@ -137,17 +135,18 @@ export default {
         }
     },
 
-    async likeOrDislikeTweet({ commit }, { id, userId }) {
+    async likeOrDislikeTweet({ commit }, { id, userId, email }) {
         commit(SET_LOADING, true, { root: true });
 
         try {
             const data = await api.put(`/tweets/${id}/like`);
-
             if (data.status === 'added') {
                 commit(LIKE_TWEET, {
                     id,
                     userId
                 });
+                await api.get(`/feed-page/${email}`);
+                // console.log(emailRespose);
             } else {
                 commit(DISLIKE_TWEET, {
                     id,

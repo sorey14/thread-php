@@ -22,17 +22,6 @@ export const likeMapper = like => ({
     userId: like.user_id
 });
 
-export const tweetMapper = tweet => ({
-    id: tweet.id,
-    text: tweet.text,
-    imageUrl: tweet.image_url,
-    created: tweet.created_at,
-    author: userMapper(tweet.author),
-    commentsCount: tweet.comments_count,
-    likesCount: tweet.likes_count,
-    likes: tweet.likes.map(likeMapper)
-});
-
 export const commentMapper = comment => ({
     id: comment.id,
     body: comment.body,
@@ -42,6 +31,18 @@ export const commentMapper = comment => ({
     created: comment.created_at,
     updated: comment.updated_at,
     author: userMapper(comment.author),
-    // likesCount: comment.likes_count,
-    // likes: comment.likes.map(likeMapper)
+    // commentsCount: comment.comments_count,
+    likesCount: comment.likes_count,
+    likes: comment.likes.map(likeMapper),
+});
+
+export const tweetMapper = tweet => ({
+    id: tweet.id,
+    text: tweet.text,
+    imageUrl: tweet.image_url,
+    created: tweet.created_at,
+    author: userMapper(tweet.author),
+    commentsCount: tweet.comments_count,
+    likesCount: tweet.likes_count,
+    likes: tweet.likes.map(likeMapper),
 });

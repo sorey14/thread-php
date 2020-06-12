@@ -18,6 +18,13 @@ class WelcomeEmail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('Welcome!')->view('emails.welcome');
+//        return $this->subject('Welcome!')->view('emails.welcome');
+        return $this->from('laravel@example.com', 'Mailtrap')
+            ->subject('Mailtrap Confirmation')
+            ->markdown('emails.welcome')
+            ->with([
+                'name' => 'New Mailtrap User',
+                'link' => 'https://mailtrap.io/inboxes'
+            ]);
     }
 }

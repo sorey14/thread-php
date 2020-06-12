@@ -10,7 +10,7 @@ use App\Action\Comment\LikeCommentAction;
 use App\Action\Comment\LikeCommentRequest;
 
 
-final class LikeController extends ApiController
+final class LikeCommentController extends ApiController
 {
     private $likeCommentAction;
 
@@ -21,7 +21,7 @@ final class LikeController extends ApiController
 
     public function likeOrDislikeComment(string $id): ApiResponse
     {
-        $response = $this->likeCommentAction->execute(new LikeCOmmentRequest((int)$id));
+        $response = $this->likeCommentAction->execute(new LikeCommentRequest((int)$id));
 
         return $this->createSuccessResponse(['status' => $response->getStatus()]);
     }

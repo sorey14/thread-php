@@ -26,14 +26,12 @@ final class LikeCommentAction
     public function execute(LikeCommentRequest $request): LikeCommentResponse
     {
         $comment = $this->commentRepository->getById($request->getCommentId());
-
         $userId = Auth::id();
-
         // if user already liked tweet, we remove previous like
         if ($this->likeRepository->existsForCommentByUser($comment->id, $userId)) {
             $this->likeRepository->deleteForCommentByUser($comment->id, $userId);
 
-            return new LikeTweetResponse(self::REMOVE_LIKE_STATUS);
+            return new LikeCommentResponse(self::REMOVE_LIKE_STATUS);
         }
 
         $like = new Like();

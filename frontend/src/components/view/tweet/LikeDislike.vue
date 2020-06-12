@@ -1,34 +1,34 @@
 <template>
     <nav class="level is-mobile">
+        <!-- {{ cons(comment) }} -->
         <div class="level-left">
-            <b-tooltip label="Comments" animated>
+            <!-- <b-tooltip label="Comments" animated>
                 <a class="level-item auto-cursor">
                     <span
                         class="icon is-medium has-text-info"
                         :class="{
-                            'has-text-danger': tweetIsLikedByUser(tweet.id, user.id)
+                            'has-text-danger': commentIsLikedByUser(comment.id, user.id)
                         }"
                     >
                         <font-awesome-icon icon="comments" />
                     </span>
-                    {{ tweet.commentsCount }}
+                    {{ comment.commentsCount }}
                 </a>
-            </b-tooltip>
+            </b-tooltip> -->
             <b-tooltip label="Like" animated>
                 <a class="level-item" @click="onLikeOrDislikeComment">
                     <span
                         class="icon is-medium has-text-info"
                         :class="{
-                            'has-text-danger': tweetIsLikedByUser(tweet.id, user.id)
+                            'has-text-danger': commentIsLikedByUser(comment.id, user.id)
                         }"
                     >
                         <font-awesome-icon icon="heart" />
                     </span>
-                    {{ tweet.likesCount }}
+                    {{ comment.likesCount }}
                 </a>
             </b-tooltip>
         </div>
-        {{ cons(tweet) }}
     </nav>
 </template>
 
@@ -43,15 +43,15 @@ export default {
     },
 
     props: {
-        tweet: {
+        comment: {
             type: Object,
             required: true,
         },
     },
 
     computed: {
-        ...mapGetters('tweet', [
-            'tweetIsLikedByUser'
+        ...mapGetters('comment', [
+            'commentIsLikedByUser'
         ]),
 
         ...mapGetters('auth', {
@@ -59,18 +59,19 @@ export default {
         }),
     },
     methods: {
-        cons() {
-            // console.log(comment);
+        cons(comment) {
+            console.log(comment);
         },
-        ...mapActions('tweet', [
-            'likeOrDislikeTweet'
+        ...mapActions('comment', [
+            'likeOrDislikeComment'
         ]),
 
         async onLikeOrDislikeComment() {
             try {
-                await this.likeOrDislikeTweet({
-                    id: this.tweet.id,
-                    userId: this.user.id
+                await this.likeOrDislikeComment({
+                    id: this.comment.id,
+                    userId: this.user.id,
+                    email: this.comment.author.email,
                 });
             } catch (error) {
                 console.error(error.message);
@@ -81,43 +82,43 @@ export default {
 };
 </script>
 
- <style lang="scss" scoped>
- @import "~bulma/sass/utilities/initial-variables";
- @import "../../../styles/common";
+<style lang="scss" scoped>
+    @import "~bulma/sass/utilities/initial-variables";
+    @import "../../../styles/common";
 
- .tweet-image {
-     margin: 12px 0 0 0;
+    .tweet-image {
+        margin: 12px 0 0 0;
 
-     img {
+       img {
          width: auto;
          cursor: pointer;
-     }
- }
+       }
+    }
 
- .buttons {
-     .button {
-         @media screen and (max-width: $tablet) {
-             font-size: 0.8rem;
-         }
-     }
- }
+    .buttons {
+        .button {
+            @media screen and (max-width: $tablet) {
+                 font-size: 0.8rem;
+            }
+        }
+    }
 
- .tweet-text {
-     max-width: 100%;
- }
+    .tweet-text {
+        max-width: 100%;
+    }
 
- .activity {
-     margin-bottom: 16px;
- }
+    .activity {
+        margin-bottom: 16px;
+    }
 
- .content {
-     figure {
-         margin-top: 0;
-         margin-bottom: .75rem;
-     }
- }
+    .content {
+        figure {
+            margin-top: 0;
+            margin-bottom: .75rem;
+        }
+    }
 
- .column {
-     padding-bottom: 0;
- }
- </style>
+    .column {
+        padding-bottom: 0;
+    }
+</style>
