@@ -1,6 +1,6 @@
 <template>
     <div v-if="tweet">
-        <!-- {{ cons(tweet)}} -->
+        {{ cons(tweet) }}
         <article class="media box tweet">
             <figure class="media-left">
                 <router-link
@@ -19,6 +19,16 @@
                     <DefaultAvatar class="image is-64x64" :user="tweet.author" />
                 </router-link>
             </figure>
+
+            <button
+                type="button"
+                class="copyLink"
+                v-clipboard:copy="tweetUrl"
+                v-clipboard:success="onCopy"
+                v-clipboard:error="onError"
+            >
+                <span class="spanLink">Copy link!</span>
+            </button>
 
             <div class="media-content">
                 <div class="columns">
@@ -111,13 +121,16 @@
 
 <script>
 import Vue from 'vue';
+import VueClipboard from 'vue-clipboard2';
 import { mapGetters, mapActions } from 'vuex';
 import Comment from './Comment.vue';
 import NewCommentForm from './NewCommentForm.vue';
 import EditTweetForm from './EditTweetForm.vue';
 import DefaultAvatar from '../../common/DefaultAvatar.vue';
 import showStatusToast from '../../mixin/showStatusToast';
-// import LikeDislike from './LikeDislike.vue';
+
+
+Vue.use(VueClipboard);
 
 Vue.component('LikeDislike', { /* ... */ });
 
@@ -140,12 +153,12 @@ export default {
     data: () => ({
         isEditTweetModalActive: false,
         isImageModalActive: false,
+        tweetUrl: window.location.href,
     }),
 
     async created() {
         try {
             await this.fetchTweetById(this.$route.params.id);
-
             this.fetchComments(this.tweet.id);
         } catch (error) {
             console.error(error.message);
@@ -175,8 +188,19 @@ export default {
     },
 
     methods: {
-        cons(tweet) {
-            console.log(tweet);
+        cons() {
+            console.log(window.location.href);
+            // .concat('://').concat(this.$route.path));
+        },
+
+        onCopy() {
+            return window.location.href;
+        },
+
+        copyLink() {
+            this.activCopyLink = !this.activCopyLink;
+            console.log(this.activCopyLink);
+            // return this.activCopyLink;
         },
         ...mapActions('tweet', [
             'fetchTweetById',
@@ -208,6 +232,24 @@ export default {
                         this.$router.push({ name: 'feed' }).catch(() => {});
                     } catch {
                         this.showErrorMessage('Unable to delete tweet!');
+                    }
+                }
+            });
+        },
+        onCopyUrlTweet() {
+            this.$buefy.dialog.confirm({
+                title: 'Url tweet '.concat(window.location.href),
+                message: 'Are you sure you want to <b>copy</b> url your tweet?',
+                confirmText: 'Copy url Tweet',
+                type: 'is-danger',
+
+                onConfirm: () => {
+                    try {
+                        // await this.deleteTweet(this.tweet.id);
+                        this.onCopy();
+                        this.showSuccessMessage('Tweet copied!');
+                    } catch {
+                        this.showErrorMessage('Unable to copy url tweet!');
                     }
                 }
             });
@@ -271,5 +313,11 @@ export default {
 
 .column {
     padding-bottom: 0;
+}
+.copyLink{
+    margin: 15px;
+    width: 25%;
+}
+.spanLink{
 }
 </style>

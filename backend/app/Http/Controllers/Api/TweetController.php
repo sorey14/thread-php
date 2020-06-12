@@ -18,6 +18,7 @@ use App\Action\Tweet\UpdateTweetAction;
 use App\Action\Tweet\UpdateTweetRequest;
 use App\Action\Tweet\UploadTweetImageAction;
 use App\Action\Tweet\UploadTweetImageRequest;
+use App\Entity\Comment;
 use App\Http\Controllers\ApiController;
 use App\Http\Presenter\TweetArrayPresenter;
 use App\Http\Request\Api\CollectionHttpRequest;
@@ -25,6 +26,7 @@ use App\Http\Request\Api\Tweet\AddTweetHttpRequest;
 use App\Http\Request\Api\Tweet\UpdateTweetHttpRequest;
 use App\Http\Request\Api\Tweet\UploadTweetImageHttpRequest;
 use App\Http\Response\ApiResponse;
+use Illuminate\Support\Facades\DB;
 
 final class TweetController extends ApiController
 {
@@ -59,6 +61,15 @@ final class TweetController extends ApiController
 
     public function getTweetCollection(CollectionHttpRequest $request): ApiResponse
     {
+        $commentTable = new Comment();
+        $tableName = $commentTable->getTable();
+        $listColumns = \Schema::getColumnListing($tableName);
+
+        if (!in_array('image_url', $listColumns))
+        {
+            DB::statement( "ALTER TABLE $tableName ADD image_url VARCHAR(255) after body" );
+        }
+
         $response = $this->getTweetCollectionAction->execute(
             new GetCollectionRequest(
                 (int)$request->query('page'),

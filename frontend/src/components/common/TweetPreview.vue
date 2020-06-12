@@ -14,7 +14,6 @@
                     <DefaultAvatar class="image is-64x64" :user="tweet.author" />
                 </router-link>
             </figure>
-
             <div class="media-content">
                 <div class="content">
                     <strong class="name">
