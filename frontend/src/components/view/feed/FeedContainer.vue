@@ -13,8 +13,15 @@
                 Tweet :)
             </b-button>
         </div>
+        <!--SELECT OPTION -->
+        <div>
+            <select v-model="sortQuery" @change="sortBy">
+                <option disabled value="">Sort by</option>
+                <option v-for="(sort, index) in sortTypes" :key="index">{{ sort }}</option>
+            </select>
+        </div>
 
-        <TweetPreviewList :tweets="tweets" @infinite="infiniteHandler" />
+        <TweetPreviewList :tweets="sortedArray" @infinite="infiniteHandler" />
 
         <b-modal :active.sync="isNewTweetModalActive" has-modal-card>
             <NewTweetForm />
@@ -43,11 +50,14 @@ export default {
     data: () => ({
         isNewTweetModalActive: false,
         page: 1,
+        sortTypes: ['asc', 'desc', 'like'],
+        sortQuery: '',
+        sortArray: [],
     }),
 
     async created() {
         try {
-            await this.fetchTweets({
+            this.tweets = await this.fetchTweets({
                 page: 1
             });
         } catch (error) {
@@ -69,9 +79,30 @@ export default {
         ...mapGetters('tweet', {
             tweets: 'tweetsSortedByCreatedDate'
         }),
+        sortedArray() {
+            if (this.sortArray.length) {
+                return this.sortArray;
+            }
+            return this.tweets;
+        },
     },
 
     methods: {
+        sortBy() {
+            this.sortArray = [];
+            if (this.sortQuery === 'like') {
+                this.sortArray = this.$store.getters['tweet/tweetsSortedByLikesCount'];
+            }
+            if (this.sortQuery === 'asc') {
+                this.sortArray = this.$store.getters['tweet/tweetsSortedByCreatedDate'];
+            }
+            if (this.sortQuery === 'desc') {
+                this.sortArray = this.$store.getters['tweet/tweetsSortedByCreatedDateDecs'];
+            }
+            // console.log(this.sortArray);
+            // return tweets;
+        },
+
         ...mapActions('tweet', [
             'fetchTweets',
         ]),
@@ -98,6 +129,10 @@ export default {
                 this.showErrorMessage(error.message);
                 $state.complete();
             }
+        },
+        resortTweets() {
+            console.log(this.sortQuery);
+            this.$store.dispatch('tweet/sortBy', this.tweets);
         },
     },
 };

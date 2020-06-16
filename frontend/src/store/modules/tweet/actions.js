@@ -1,4 +1,5 @@
 import api from '@/api/Api';
+// import moment from 'moment';
 import { tweetMapper } from '@/services/Normalizer';
 import {
     SET_TWEETS,
@@ -6,7 +7,7 @@ import {
     SET_TWEET,
     DELETE_TWEET,
     LIKE_TWEET,
-    DISLIKE_TWEET
+    DISLIKE_TWEET,
 } from './mutationTypes';
 import { SET_LOADING } from '../../mutationTypes';
 
@@ -163,4 +164,15 @@ export default {
             return Promise.reject(error);
         }
     },
+
+    sortBy({ commit }, tweets) {
+        console.log(this.sortQuery);
+        if (this.sortQuery === 'like') {
+            console.log('Computed');
+            const localTweets = Object.values(tweets).sort((a, b) => a - b);
+            commit(SET_TWEETS, localTweets);
+        }
+        return this.$store.getters.tweetsSortedByCreatedDate;
+    }
+
 };

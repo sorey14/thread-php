@@ -6,7 +6,7 @@ import {
     DELETE_TWEET,
     INCREMENT_COMMENTS_COUNT,
     LIKE_TWEET,
-    DISLIKE_TWEET
+    DISLIKE_TWEET,
 } from './mutationTypes';
 
 export default {
@@ -49,5 +49,6 @@ export default {
         state.tweets[id].likesCount--;
 
         state.tweets[id].likes = state.tweets[id].likes.filter(like => like.userId !== userId);
-    }
+    },
+
 };
