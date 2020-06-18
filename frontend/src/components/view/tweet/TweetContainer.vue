@@ -245,7 +245,6 @@ export default {
 
                 onConfirm: () => {
                     try {
-                        // await this.deleteTweet(this.tweet.id);
                         this.onCopy();
                         this.showSuccessMessage('Tweet copied!');
                     } catch {

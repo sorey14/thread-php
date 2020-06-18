@@ -5,6 +5,18 @@ export default {
         (a, b) => (
             moment(b.created) - moment(a.created)
         )
+    ),    
+
+    tweetsSortedByCreatedDateDecs: state => Object.values(state.tweets).sort(
+        (a, b) => (
+            moment(b.created) - moment(a.created)
+        )
+    ).slice().reverse(),
+
+    tweetsSortedByLikesCount: state => Object.values(state.tweets).sort(
+        (a, b) => (
+            b.likesCount - a.likesCount
+        )
     ),
 
     getTweetById: state => id => state.tweets[id],
@@ -14,5 +26,6 @@ export default {
     tweetIsLikedByUser: (state, getters) => (tweetId, userId) => getters
         .getTweetById(tweetId)
         .likes
-        .find(like => like.userId === userId) !== undefined
+        .find(like => like.userId === userId) !== undefined,
+
 };
