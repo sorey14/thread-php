@@ -8,6 +8,7 @@ use App\Action\GetByIdRequest;
 use App\Action\GetCollectionRequest;
 use App\Action\User\GetUserByIdAction;
 use App\Action\User\GetUserCollectionAction;
+use App\Entity\User;
 use App\Http\Controllers\ApiController;
 use App\Http\Presenter\UserArrayPresenter;
 use App\Http\Request\Api\CollectionHttpRequest;
@@ -47,5 +48,10 @@ final class UserController extends ApiController
         $user = $this->getUserByIdAction->execute(new GetByIdRequest((int)$id))->getUser();
 
         return $this->createSuccessResponse($this->presenter->present($user));
+    }
+    public function getAllUsers(): ApiResponse
+    {
+        $user = User::get();
+        return $this->createSuccessResponse($this->presenter->presentCollection($user));
     }
 }

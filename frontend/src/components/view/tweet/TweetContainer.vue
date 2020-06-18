@@ -1,6 +1,6 @@
 <template>
     <div v-if="tweet">
-        {{ cons(tweet) }}
+        {{ cons(this.$store.getters['user/fetchUsers']) }}
         <article class="media box tweet">
             <figure class="media-left">
                 <router-link
@@ -76,8 +76,8 @@
                                             >
                                                 <font-awesome-icon icon="heart" />
                                             </span>
-                                            {{ tweet.likesCount }}
                                         </a>
+                                        <span class="listUser" @click="listUsersLike">{{ tweet.likesCount }}</span>
                                     </b-tooltip>
                                 </div>
                             </nav>
@@ -91,17 +91,12 @@
                         </div>
                     </div>
                 </div>
-
                 <template v-for="comment in getCommentsByTweetId(tweet.id)">
                     <Comment
-                        :key="comment.id"
                         :comment="comment"
+                        :key="comment.id"
                         :tweet="tweet"
                     />
-                    <!-- <LikeDislike
-                        :key="comment.author.id"
-                        :comment="comment"
-                    /> -->
                 </template>
                 <NewCommentForm :tweet-id="tweet.id" />
             </div>
@@ -116,6 +111,18 @@
         <b-modal :active.sync="isEditTweetModalActive" has-modal-card>
             <EditTweetForm :tweet="tweet" />
         </b-modal>
+
+        <b-modal :active.sync="isShowUserActive" has-modal-card>
+            <article class="modal-card">
+                <div class="modal-card-body">
+                    <div v-for="like in tweet.likes" :key="like.userId">
+                        <UserComment
+                            :like="like"
+                        />
+                    </div>
+                </div>
+            </article>
+        </b-modal>
     </div>
 </template>
 
@@ -124,6 +131,7 @@ import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import { mapGetters, mapActions } from 'vuex';
 import Comment from './Comment.vue';
+import UserComment from './UserComment.vue';
 import NewCommentForm from './NewCommentForm.vue';
 import EditTweetForm from './EditTweetForm.vue';
 import DefaultAvatar from '../../common/DefaultAvatar.vue';
@@ -142,7 +150,7 @@ export default {
         NewCommentForm,
         EditTweetForm,
         DefaultAvatar,
-        // LikeDislike,
+        UserComment,
     },
 
     mixins: [showStatusToast],
@@ -154,12 +162,13 @@ export default {
         isEditTweetModalActive: false,
         isImageModalActive: false,
         tweetUrl: window.location.href,
+        isShowUserActive: false,
     }),
 
     async created() {
         try {
             await this.fetchTweetById(this.$route.params.id);
-            this.fetchComments(this.tweet.id);
+            await this.fetchAllUsers();
         } catch (error) {
             console.error(error.message);
         }
@@ -182,25 +191,28 @@ export default {
         ]),
 
         tweet() {
-            // console.log(this.getTweetById(this.$route.params.id));
             return this.getTweetById(this.$route.params.id);
         },
     },
 
     methods: {
-        cons() {
-            console.log(window.location.href);
-            // .concat('://').concat(this.$route.path));
+        ...mapActions('user', [
+            'fetchAllUsers',
+        ]),
+
+        cons(tweet) {
+            console.log(tweet);
         },
 
         onCopy() {
             return window.location.href;
         },
-
+        onError() {
+            this.showErrorMessage('Unable to copy link!');
+        },
         copyLink() {
             this.activCopyLink = !this.activCopyLink;
             console.log(this.activCopyLink);
-            // return this.activCopyLink;
         },
         ...mapActions('tweet', [
             'fetchTweetById',
@@ -236,23 +248,6 @@ export default {
                 }
             });
         },
-        onCopyUrlTweet() {
-            this.$buefy.dialog.confirm({
-                title: 'Url tweet '.concat(window.location.href),
-                message: 'Are you sure you want to <b>copy</b> url your tweet?',
-                confirmText: 'Copy url Tweet',
-                type: 'is-danger',
-
-                onConfirm: () => {
-                    try {
-                        this.onCopy();
-                        this.showSuccessMessage('Tweet copied!');
-                    } catch {
-                        this.showErrorMessage('Unable to copy url tweet!');
-                    }
-                }
-            });
-        },
 
         showImageModal() {
             this.isImageModalActive = true;
@@ -269,7 +264,11 @@ export default {
             } catch (error) {
                 console.error(error.message);
             }
-        }
+        },
+
+        listUsersLike() {
+            this.isShowUserActive = true;
+        },
     },
 };
 </script>
@@ -318,5 +317,8 @@ export default {
     width: 25%;
 }
 .spanLink{
+}
+.listUser{
+    line-height: 2;
 }
 </style>

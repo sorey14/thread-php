@@ -99,8 +99,6 @@ export default {
             if (this.sortQuery === 'desc') {
                 this.sortArray = this.$store.getters['tweet/tweetsSortedByCreatedDateDecs'];
             }
-            // console.log(this.sortArray);
-            // return tweets;
         },
 
         ...mapActions('tweet', [
@@ -130,10 +128,10 @@ export default {
                 $state.complete();
             }
         },
-        resortTweets() {
+        /* resortTweets() {
             console.log(this.sortQuery);
             this.$store.dispatch('tweet/sortBy', this.tweets);
-        },
+        }, */
     },
 };
 </script>
