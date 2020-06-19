@@ -1,6 +1,6 @@
 <template>
     <div v-if="tweet">
-        {{ cons(this.$store.getters['user/fetchUsers']) }}
+        <!-- {{ cons(tweets) }} -->
         <article class="media box tweet">
             <figure class="media-left">
                 <router-link
@@ -91,6 +91,8 @@
                         </div>
                     </div>
                 </div>
+                <!-- {{ cons(getCommentsByTweetId(tweet.id)) }} -->
+                <!-- {{ cons(tweet.id) }} -->
                 <template v-for="comment in getCommentsByTweetId(tweet.id)">
                     <Comment
                         :comment="comment"
@@ -169,6 +171,7 @@ export default {
         try {
             await this.fetchTweetById(this.$route.params.id);
             await this.fetchAllUsers();
+            this.fetchComments(this.tweet.id);
         } catch (error) {
             console.error(error.message);
         }

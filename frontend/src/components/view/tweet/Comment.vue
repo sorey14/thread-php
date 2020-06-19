@@ -13,6 +13,7 @@
                 <DefaultAvatar class="image is-48x48" :user="comment.author" />
             </router-link>
         </figure>
+        <!-- {{ cons(comment) }} -->
         <div class="media-content">
             <div class="content">
                 <p>

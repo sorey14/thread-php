@@ -21,6 +21,10 @@ export default {
 
     getTweetById: state => id => state.tweets[id],
 
+    getAllTweetLikedByUserId: state => id => Object.values(state.tweets).filter(
+        (tweet) => tweet.likes.find((like) => like.userId === id)
+    ),
+
     isTweetOwner: (state, getters) => (tweetId, userId) => getters.getTweetById(tweetId).author.id === userId,
 
     tweetIsLikedByUser: (state, getters) => (tweetId, userId) => getters

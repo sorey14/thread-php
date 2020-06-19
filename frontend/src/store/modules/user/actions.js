@@ -5,7 +5,7 @@ import { SET_LOADING } from '../../mutationTypes';
 export default {
     async fetchAllUsers({ commit }) {
         commit(SET_LOADING, true, { root: true });
-        console.log('action fetchAllUsers');
+        // console.log('action fetchAllUsers');
 
         try {
             const user = await api.post('/users/users');
