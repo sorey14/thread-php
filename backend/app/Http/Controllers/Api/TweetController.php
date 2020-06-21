@@ -60,7 +60,7 @@ final class TweetController extends ApiController
     }
 
     public function getTweetCollection(CollectionHttpRequest $request): ApiResponse
-    {
+    {   // checck for image_url
         $commentTable = new Comment();
         $tableName = $commentTable->getTable();
         $listColumns = \Schema::getColumnListing($tableName);
@@ -69,7 +69,8 @@ final class TweetController extends ApiController
         {
             DB::statement( "ALTER TABLE $tableName ADD image_url VARCHAR(255) after body" );
         }
-
+        // end check image_url
+        
         $response = $this->getTweetCollectionAction->execute(
             new GetCollectionRequest(
                 (int)$request->query('page'),

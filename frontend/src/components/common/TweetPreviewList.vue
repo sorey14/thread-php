@@ -2,6 +2,7 @@
     <div class="tweets-container">
         <transition-group name="slide-prev" tag="div">
             <template v-for="tweet in tweets">
+                <!-- {{ cons(tweet) }} -->
                 <TweetPreview
                     :key="tweet.id"
                     :tweet="tweet"
@@ -37,6 +38,9 @@ export default {
     },
 
     methods: {
+        cons(tweet) {
+            console.log(tweet);
+        },
         onTweetClick(tweet) {
             this.$router.push({ name: 'tweet-page', params: { id: tweet.id } }).catch(() => {});
         },

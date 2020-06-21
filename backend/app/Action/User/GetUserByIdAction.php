@@ -22,4 +22,5 @@ final class GetUserByIdAction
 
         return new GetUserByIdResponse($user);
     }
+
 }

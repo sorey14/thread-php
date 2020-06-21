@@ -13,6 +13,7 @@
                 <DefaultAvatar class="image is-48x48" :user="comment.author" />
             </router-link>
         </figure>
+        <!-- {{ cons(comment) }} -->
         <div class="media-content">
             <div class="content">
                 <p>
@@ -88,15 +89,7 @@ export default {
             required: true,
         },
     },
-    /* async created() {
-        try {
-            await this.fetchCommentById(this.$route.params.id);
 
-            this.fetchComments(this.comment.id);
-        } catch (error) {
-            console.error(error.message);
-        }
-    }, */
     computed: {
         ...mapGetters('auth', {
             user: 'getAuthenticatedUser'
@@ -106,10 +99,6 @@ export default {
             'isCommentOwner',
             'getCommentById',
         ]),
-        /* comment() {
-            // console.log(this.getTweetById(this.$route.params.id));
-            return this.getCommentById(this.$route.params.id);
-        } */
     },
 
     methods: {
@@ -137,9 +126,8 @@ export default {
                     try {
                         await this.deleteComment(this.comment.id);
                         this.showSuccessMessage('Comment deleted!');
-                        // console.log(this.tweet.id);
                         this.$router.push({ name: 'tweet-page', params: { id: this.tweet.id } }).catch(() => {});
-                        // this.$router.push({ name: 'feed' }).catch(() => {});
+                        this.$router.push({ name: 'feed' }).catch(() => {});
                     } catch {
                         this.showErrorMessage('Unable to delete comment!');
                     }

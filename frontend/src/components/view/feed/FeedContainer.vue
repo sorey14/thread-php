@@ -13,16 +13,18 @@
                 Tweet :)
             </b-button>
         </div>
+        <!-- {{ cons() }} -->
         <!--SELECT OPTION -->
         <div>
             <select v-model="sortQuery" @change="sortBy">
                 <option disabled value="">Sort by</option>
                 <option v-for="(sort, index) in sortTypes" :key="index">{{ sort }}</option>
             </select>
+            <button class="item-right" @click="getLikedTweets">
+                Show liked tweets
+            </button>
         </div>
-
         <TweetPreviewList :tweets="sortedArray" @infinite="infiniteHandler" />
-
         <b-modal :active.sync="isNewTweetModalActive" has-modal-card>
             <NewTweetForm />
         </b-modal>
@@ -53,11 +55,14 @@ export default {
         sortTypes: ['asc', 'desc', 'like'],
         sortQuery: '',
         sortArray: [],
+        likedTweetsArray: [],
+        attrLikedFlag: false,
+        sortArrayFlag: false,
     }),
 
     async created() {
         try {
-            this.tweets = await this.fetchTweets({
+            await this.fetchTweets({
                 page: 1
             });
         } catch (error) {
@@ -77,30 +82,63 @@ export default {
 
     computed: {
         ...mapGetters('tweet', {
-            tweets: 'tweetsSortedByCreatedDate'
+            tweets: 'tweetsSortedByCreatedDate',
+            getLikedTweetsList: 'getAllTweetLikedByUserId',
         }),
         sortedArray() {
-            if (this.sortArray.length) {
-                return this.sortArray;
+            let res = this.tweets;
+            if (this.attrLikedFlag) {
+                // console.log('attrLikedFlag');
+                this.resetAttrFlag();
+                res = this.likedTweetsArray;
             }
-            return this.tweets;
+
+            if (this.sortArrayFlag) {
+                // console.log('sortArrayFlag');
+                this.resetAttrFlag();
+                res = this.sortArray;
+            }
+
+            return res;
         },
+
+        ...mapGetters('auth', {
+            user: 'getAuthenticatedUser'
+        }),
+
     },
 
     methods: {
+        getLikedTweets() {
+            // console.log(this.attrLikedFlag);
+            // console.log(this.tweets);
+            this.attrLikedFlag = true;
+            // console.log(this.attrLikedFlag);
+            this.likedTweetsArray = this.getLikedTweetsList(this.user.id);
+            // console.log(this.likedTweetsArray);
+        },
+        resetAttrFlag() {
+            this.attrLikedFlag = false;
+            this.sortArrayFlag = false;
+        },
+
         sortBy() {
             this.sortArray = [];
             if (this.sortQuery === 'like') {
+                this.sortQuery = '';
+                this.sortArrayFlag = true;
                 this.sortArray = this.$store.getters['tweet/tweetsSortedByLikesCount'];
             }
             if (this.sortQuery === 'asc') {
+                this.sortQuery = '';
+                this.sortArrayFlag = true;
                 this.sortArray = this.$store.getters['tweet/tweetsSortedByCreatedDate'];
             }
             if (this.sortQuery === 'desc') {
+                this.sortQuery = '';
+                this.sortArrayFlag = true;
                 this.sortArray = this.$store.getters['tweet/tweetsSortedByCreatedDateDecs'];
             }
-            // console.log(this.sortArray);
-            // return tweets;
         },
 
         ...mapActions('tweet', [
@@ -130,9 +168,8 @@ export default {
                 $state.complete();
             }
         },
-        resortTweets() {
-            console.log(this.sortQuery);
-            this.$store.dispatch('tweet/sortBy', this.tweets);
+        showLikedTweets() {
+            this.isShowLikedTweets = true;
         },
     },
 };
@@ -161,5 +198,12 @@ export default {
     @media screen and (max-width: $tablet) {
         font-size: 1rem;
     }
+}
+.item-right{
+    right: 50px;
+    float: right;
+    border: 1px solid;
+    color: #b4b4b4 !important;
+    padding: 0 10px;
 }
 </style>

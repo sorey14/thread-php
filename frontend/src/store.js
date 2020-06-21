@@ -5,6 +5,7 @@ import mutations from './store/mutations';
 import getters from './store/getters';
 import actions from './store/actions';
 import auth from './store/modules/auth';
+import user from './store/modules/user';
 import tweet from './store/modules/tweet';
 import comment from './store/modules/comment';
 
@@ -20,5 +21,6 @@ export default new Vuex.Store({
         auth,
         tweet,
         comment,
+        user,
     },
 });

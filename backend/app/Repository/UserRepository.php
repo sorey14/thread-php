@@ -40,4 +40,9 @@ final class UserRepository implements Paginable
 
         return $user;
     }
+
+    public function getUsersAll(): User
+    {
+        return User::all();
+    }
 }

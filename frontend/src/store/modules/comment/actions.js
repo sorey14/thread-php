@@ -22,7 +22,7 @@ export default {
             });
             commit(SET_COMMENTS, comments);
             commit(SET_LOADING, false, { root: true });
-
+            // console.log(comments);
             return Promise.resolve(
                 comments.map(commentMapper)
             );
