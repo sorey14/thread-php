@@ -20,11 +20,15 @@
                 <option disabled value="">Sort by</option>
                 <option v-for="(sort, index) in sortTypes" :key="index">{{ sort }}</option>
             </select>
+            <select v-model="displayMode">
+                <option disabled value="">displayMode</option>
+                <option v-for="(mode, index) in modes" :key="index">{{ mode }}</option>
+            </select>
             <button class="item-right" @click="getLikedTweets">
                 Show liked tweets
             </button>
         </div>
-        <TweetPreviewList :tweets="sortedArray" @infinite="infiniteHandler" />
+        <TweetPreviewList :tweets="sortedArray" :display_mode="displayMode" @infinite="infiniteHandler" />
         <b-modal :active.sync="isNewTweetModalActive" has-modal-card>
             <NewTweetForm />
         </b-modal>
@@ -53,6 +57,8 @@ export default {
         isNewTweetModalActive: false,
         page: 1,
         sortTypes: ['asc', 'desc', 'like'],
+        modes: ['card', 'media', 'default'],
+        displayMode: 'default',
         sortQuery: '',
         sortArray: [],
         likedTweetsArray: [],
@@ -85,6 +91,7 @@ export default {
             tweets: 'tweetsSortedByCreatedDate',
             getLikedTweetsList: 'getAllTweetLikedByUserId',
         }),
+
         sortedArray() {
             let res = this.tweets;
             if (this.attrLikedFlag) {
@@ -121,7 +128,6 @@ export default {
             this.attrLikedFlag = false;
             this.sortArrayFlag = false;
         },
-
         sortBy() {
             this.sortArray = [];
             if (this.sortQuery === 'like') {

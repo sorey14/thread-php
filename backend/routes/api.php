@@ -17,10 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     Route::get('/feed-page/{email}', function ($email) {
         Mail::to($email)->send(new WelcomeEmail());
-
         return 'A message has been sent to Mailtrap!';
-
-
     });
 
     Route::group(['prefix' => 'auth', 'namespace' => 'Api\\Auth'], function () {

@@ -32,6 +32,12 @@
                                         @keyup.native.enter="onLogin"
                                     />
                                 </b-field>
+                                <b-field label="Reset password">
+                                    <b-checkbox
+                                        @input="onReset"
+                                    />
+                                </b-field>
+
 
                                 <div class="has-text-centered">
                                     <button
@@ -66,13 +72,24 @@ export default {
             password: '',
         },
     }),
-
+    computed: {
+        isReset() {
+            if (!this.user.check) {
+                console.log('test');
+            }
+            return 0;
+        },
+    },
     methods: {
         ...mapActions('auth', [
             'signIn',
         ]),
-
+        onReset() {
+            console.log('onreset');
+            this.$router.push({ path: '/auth/reset-password' }).catch(() => {});
+        },
         onLogin() {
+            console.log(this.user);
             this.signIn(this.user)
                 .then(() => {
                     this.showSuccessMessage('Welcome!');

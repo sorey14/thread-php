@@ -30,7 +30,8 @@
                         :comment="comment"
                     />
                 </p>
-                <figure v-if="comment.imageUrl!=comment.body" class="image is-3by1 tweet-image">
+                {{ cons(comment) }}
+                <figure v-if="comment.imageUrl" class="image is-3by1 tweet-image">
                     <img
                         :src="comment.imageUrl"
                         alt="Comment image"

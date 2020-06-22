@@ -7,6 +7,7 @@ export default {
         commit(SET_LOADING, true, { root: true });
 
         try {
+            console.log(email + password);
             const data = await api.post('/auth/login', {
                 email,
                 password,
